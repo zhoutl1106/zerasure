@@ -35,6 +35,7 @@ Each row corresponding to one specified $(k,m,w)$ parameters obtained by *geneti
 - crossover rate = 0.6
 - mutation rate = 0.1
 - maximum population = 1000
+
 Within one row, first 3 elements are $(k,m,w)$, then $k+m$ rest numbers for $X,Y$ array (see definition of Cauchy matrix). An example of use these numbers will be shown in next section.
 
 ## Examples
