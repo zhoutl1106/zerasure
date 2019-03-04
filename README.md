@@ -27,8 +27,9 @@ make
 in the root directory in the source code. An executable file *zerasure* will be generated.
 
 ## Pre-optimized Cauchy Matrix
-Several pre-optimzed $X,Y$ array to define *Cauchy matrix* are provided in **PreOpt/ge_100_03_06_01_1000_weighted_s13.txt**
-each row corresponding to one specified $(k,m,w)$ parameters obtained by *genetic algorithm* with
+Several pre-optimzed $X,Y$ array to define *Cauchy matrix* are provided in **PreOpt/ge_100_03_06_01_1000_weighted_s13.txt**.  
+Each row corresponding to one specified $(k,m,w)$ parameters obtained by *genetic algorithm* with
+
 - initial population = 100
 - select rate = 0.3
 - crossover rate = 0.6
