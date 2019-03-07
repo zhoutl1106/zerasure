@@ -1204,14 +1204,11 @@ void jerasure_get_stats(double *fill_in)
     jerasure_total_memcpy_bytes = 0;
 }
 
-long long diff_us(struct timeval start, struct timeval end);
-//extern int tc_cpy, tc_xor,n_tc_cpy, n_tc_xor;
 void jerasure_do_scheduled_operations(char **ptrs, int **operations, int packetsize)
 {
     char *sptr;
     char *dptr;
     int op;
-    struct timeval t0,t1;
 
     for (op = 0; operations[op][0] >= 0; op++) {
         sptr = ptrs[operations[op][0]] + operations[op][1]*packetsize;
@@ -1225,22 +1222,12 @@ void jerasure_do_scheduled_operations(char **ptrs, int **operations, int packets
         if (operations[op][4]) {
             //      printf("xor(%p, %p -> %p, %d)\n", sptr, dptr, dptr, packetsize);
             //        printf("xor %p->%p %p->%p\n", sptr, sptr+packetsize, dptr, dptr+packetsize);
-//            gettimeofday(&t0,NULL);
             galois_region_xor(sptr, dptr, dptr, packetsize);
-//            gettimeofday(&t1,NULL);
-//            tc_xor += diff_us(t0,t1);
-//            n_tc_xor++;
-//            printf("jerasure: xor %d\n", diff_us(t0,t1));
             jerasure_total_xor_bytes += packetsize;
         } else {
             //      printf("memcpy(%p <- %p)\n",dptr, sptr);
             //        printf("cpy %p->%p %p->%p\n", sptr, sptr+packetsize, dptr, dptr+packetsize);
-//            gettimeofday(&t0,NULL);
             memcpy(dptr, sptr, packetsize);
-//            gettimeofday(&t1,NULL);
-//            tc_cpy += diff_us(t0,t1);
-//            n_tc_cpy++;
-//            printf("jerasure: cpy %d\n", diff_us(t0,t1));
             jerasure_total_memcpy_bytes += packetsize;
         }
     }

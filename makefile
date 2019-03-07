@@ -9,24 +9,24 @@ OBJS=galois.o \
 	zxorgenetic.o \
 	utils.o
 
-CC=clang
-CXX=clang++
-CXXFLAGS=-I./Jerasure-1.2A -mavx2 -msse4
+CC=gcc
+CXX=g++
+CXXFLAGS=-I./Jerasure-1.2A -mavx2 -msse4 -std=c99
 
 zerasure: $(OBJS)
 	$(CXX) -o zerasure $(OBJS)
 
 galois.o: Jerasure-1.2A/galois.c Jerasure-1.2A/galois.h
-	$(CC) -c Jerasure-1.2A/galois.c
+	$(CC) -c Jerasure-1.2A/galois.c -std=c99
 
 jerasure.o: Jerasure-1.2A/jerasure.c Jerasure-1.2A/jerasure.h
-	$(CC) -c Jerasure-1.2A/jerasure.c
+	$(CC) -c Jerasure-1.2A/jerasure.c -std=c99
 
 reed_sol.o: Jerasure-1.2A/reed_sol.c Jerasure-1.2A/reed_sol.h
-	$(CC) -c Jerasure-1.2A/reed_sol.c
+	$(CC) -c Jerasure-1.2A/reed_sol.c -std=c99
 
 cauchy.o: Jerasure-1.2A/cauchy.c Jerasure-1.2A/cauchy.h
-	$(CC) -c Jerasure-1.2A/cauchy.c
+	$(CC) -c Jerasure-1.2A/cauchy.c -std=c99
 
 main.o :
 	$(CXX) -c main.cpp $(CXXFLAGS)
