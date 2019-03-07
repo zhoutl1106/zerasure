@@ -179,7 +179,7 @@ int jerasure_matrix_decode(int k, int m, int w, int *matrix, int row_k_ones, int
 
     if (w != 8 && w != 16 && w != 32) return -1;
 
-    erased = jerasure_erasures_to_erased(k, m, erasures);
+    int* erased = jerasure_erasures_to_erased(k, m, erasures);
 
     if (erased == NULL) return -1;
 

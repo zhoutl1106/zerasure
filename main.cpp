@@ -1,4 +1,4 @@
-#include <stdio.h>
+/*#include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 extern "C"{
@@ -30,12 +30,25 @@ extern "C"{
 
 using namespace std;
 
+*/
+
+#include "Search/zxorelement.h"
+#include "Search/zxorgenetic.h"
+
 
 int main(int argc, char *argv[])
 {
+//    ZAbstractElement *e = (ZAbstractElement* ) new ZXORElement(3);
+    ZXORElement* e = new ZXORElement(3);
+    ZXORGenetic g;
+    g.mutation(e);
+    e->test_cost_weight(1024*1024*10);
+
+
+
 //    single_1result_vs_dp(argc,argv);
 //    search(argc,argv);
-    test_single_array();
+//    test_single_array();
 
 //    if(argc != 10)
 //        usage();
@@ -250,4 +263,5 @@ int main(int argc, char *argv[])
     for(int i = 0;i<K;i++)
         printf("column %d: %s\n", i,memcmp(adat[i], dat + i*R*packetsize,R*packetsize)==0?"Same":"Diff");
         */
+    return 0;
 }
