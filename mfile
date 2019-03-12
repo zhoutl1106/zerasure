@@ -1,0 +1,50 @@
+OBJS=galois.o \
+	jerasure.o \
+	reed_sol.o \
+	cauchy.o \
+	main.o \
+	zelement.o \
+	zgenetic.o \
+	utils.o \
+	zexample.o \
+	zrandomarray.o \
+	zoxc.o
+
+CC=gcc	
+CXX=g++
+CFLAGS=-mavx2 -msse4 -std=c99 -O3
+CXXFLAGS=-mavx2 -msse4 -O3
+
+zerasure: $(OBJS) mfile
+	$(CXX) -o zerasure $(OBJS)
+
+galois.o: Jerasure-1.2A/galois.c Jerasure-1.2A/galois.h mfile
+	$(CC) -c Jerasure-1.2A/galois.c $(CFLAGS)
+
+jerasure.o: Jerasure-1.2A/jerasure.c Jerasure-1.2A/jerasure.h mfile
+	$(CC) -c Jerasure-1.2A/jerasure.c $(CFLAGS)
+
+reed_sol.o: Jerasure-1.2A/reed_sol.c Jerasure-1.2A/reed_sol.h mfile
+	$(CC) -c Jerasure-1.2A/reed_sol.c $(CFLAGS)
+
+cauchy.o: Jerasure-1.2A/cauchy.c Jerasure-1.2A/cauchy.h mfile
+	$(CC) -c Jerasure-1.2A/cauchy.c $(CFLAGS)
+
+main.o : main.cpp mfile
+	$(CXX) -c main.cpp $(CXXFLAGS)
+zelement.o : Search/zelement.cpp Search/zelement.h mfile
+	$(CXX) -c Search/zelement.cpp $(CXXFLAGS)
+zgenetic.o : Search/zgenetic.cpp Search/zgenetic.h mfile
+	$(CXX) -c Search/zgenetic.cpp $(CXXFLAGS)
+utils.o : utils.cpp utils.h mfile
+	$(CXX) -c utils.cpp $(CXXFLAGS)
+zexample.o : Example/zexample.cpp Example/zexample.h mfile
+	$(CXX) -c Example/zexample.cpp $(CXXFLAGS)
+zrandomarray.o : Search/zrandomarray.cpp Search/zrandomarray.h mfile
+	$(CXX) -c Search/zrandomarray.cpp $(CXXFLAGS)
+zoxc.o : Algorithm/zoxc.cpp Algorithm/zoxc.h mfile
+	$(CXX) -c Algorithm/zoxc.cpp $(CXXFLAGS)
+
+.PHONY: clean
+clean:
+	rm zerasure $(OBJS)

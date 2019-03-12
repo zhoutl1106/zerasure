@@ -13,22 +13,24 @@ SOURCES += \
     Jerasure-1.2A/reed_sol.c \
     Jerasure-1.2A/cauchy.c \ 
     main.cpp \
-    Search/zabstractelement.cpp \
-    Search/zxorelement.cpp \
-    Search/zabstractgenetic.cpp \
-    Search/zxorgenetic.cpp \
-    utils.cpp
+    utils.cpp \
+    Example/zexample.cpp \
+    Search/zelement.cpp \
+    Search/zgenetic.cpp \
+    Search/zrandomarray.cpp \
+    Algorithm/zoxc.cpp
 
 HEADERS += \
     Jerasure-1.2A/galois.h \
     Jerasure-1.2A/jerasure.h \
     Jerasure-1.2A/reed_sol.h \
     Jerasure-1.2A/cauchy.h \
-    Search/zabstractelement.h \
-    Search/zxorelement.h \
-    Search/zabstractgenetic.h \
-    Search/zxorgenetic.h \
-    utils.h
+    utils.h \
+    Example/zexample.h \
+    Search/zelement.h \
+    Search/zgenetic.h \
+    Search/zrandomarray.h \
+    Algorithm/zoxc.h
 
 DISTFILES += \
     README.md

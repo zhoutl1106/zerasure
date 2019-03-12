@@ -1,7 +1,8 @@
-/*#include <stdio.h>
+#include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
-extern "C"{
+#include <string.h>
+/*extern "C"{
 #include "Jerasure-1.2A/cauchy.h"
 #include "Jerasure-1.2A/jerasure.h"
 #include <time.h>
@@ -17,7 +18,6 @@ extern "C"{
 //#include "zoxc.h"
 #include <vector>
 #include <x86intrin.h>
-#include <string.h>
 #include <sys/time.h>
 #include <cassert>
 #include "Search/zsearch.h"
@@ -32,17 +32,28 @@ using namespace std;
 
 */
 
-#include "Search/zxorelement.h"
-#include "Search/zxorgenetic.h"
+#include "Example/zexample.h"
 
+void usage()
+{
+    printf("Usage:\n");
+    printf("\t./zerasure test_cost_weight [size] [loops]\n");
+    printf("\t\tTest the weight of memcpy and XOR in the schedule, \n\t\tusing data size [size] and run [loops] times\n");
+}
 
 int main(int argc, char *argv[])
 {
-//    ZAbstractElement *e = (ZAbstractElement* ) new ZXORElement(3);
-    ZXORElement* e = new ZXORElement(3);
-    ZXORGenetic g;
-    g.mutation(e);
-    e->test_cost_weight(1024*1024*10);
+    if(argc < 2)
+    {
+        usage();
+        exit(-1);
+    }
+
+    if(strcmp(argv[1], "test_cost_weight") == 0)
+        ZExample::test_cost_weight(argc,argv);
+
+    if(strcmp(argv[1], "single") == 0)
+        ZExample::single(argc,argv);
 
 
 
