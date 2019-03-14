@@ -5,13 +5,13 @@
 #include <iostream>
 #include <lemon/list_graph.h>
 #include <lemon/matching.h>
+#include "../utils.h"
 using namespace lemon;
 using namespace std;
 
 #define E 1000
 
 #include <cassert>
-void freeVectorPointer(vector<int*> &p);
 
 ZOXC::ZOXC(int width, int height)
 {
@@ -59,8 +59,8 @@ ZOXC::~ZOXC()
     g->all_nodes.clear();
 
     delete g;
-//    freeVectorPointer(intermedia_schedule);
-//    freeVectorPointer(schedule);
+    freeVectorPointer(intermedia_schedule);
+    freeVectorPointer(schedule);
 }
 
 void ZOXC::clear_g_weight()

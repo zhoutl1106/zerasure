@@ -1,6 +1,5 @@
 #include "utils.h"
 
-
 long long diff_ms(struct timeval start, struct timeval end)
 {
     long mtime, seconds, useconds;
@@ -52,4 +51,10 @@ void fast_xor(char* r1, char* r2, char* r3, int size)
         *e3 = _mm256_xor_si256(*e1,*e2);
     }
 #endif
+}
+
+void freeVectorPointer(vector<int*> &p)
+{
+    for(int i = 0;i<p.size();i++)
+        free(p[i]);
 }

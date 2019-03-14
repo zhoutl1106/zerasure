@@ -39,6 +39,9 @@ void usage()
     printf("Usage:\n");
     printf("\t./zerasure test_cost_weight [size] [loops]\n");
     printf("\t\tTest the weight of memcpy and XOR in the schedule, \n\t\tusing data size [size] and run [loops] times\n");
+    printf("\t... | ./zerasure single cost_func[0..2] strategy[0..7]\n");
+    printf("\t\tRead K,M,W,X,Y from stdin, generate schedule for given\n");
+    printf("\t\tusing cost function [cost_func] and strategy [strategy]\n");
 }
 
 int main(int argc, char *argv[])
@@ -54,7 +57,7 @@ int main(int argc, char *argv[])
 
     if(strcmp(argv[1], "single") == 0)
         ZExample::single(argc,argv);
-
+    printf("--pin1\n");
 
 
 //    single_1result_vs_dp(argc,argv);

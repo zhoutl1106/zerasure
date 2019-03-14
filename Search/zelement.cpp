@@ -47,17 +47,11 @@ long long schedule_weight_3(vector<int*> &sch)
 ZElement::ZElement(int *p)
 {
     array = vector<int>(p,p+K+M);
-    for(int i = 0;i<K+M;i++)
-        printf("%d ",array[i]);
-    printf("\n");
 }
 
 ZElement::ZElement(vector<int> p)
 {
     array = p;
-    for(int i = 0;i<K+M;i++)
-        printf("%d ",array[i]);
-    printf("\n");
 }
 
 void ZElement::init(int tK, int tM, int tW, int tcost, int tstrategy)
