@@ -18,6 +18,7 @@ void fast_xor(char* r1, char* r2, char* r3, int size);
 
 
 void freeVectorPointer(vector<int*> &p);
+void free2dSchedule5(int **p);
 
 
 #endif // UTILS_H

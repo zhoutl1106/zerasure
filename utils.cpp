@@ -58,3 +58,15 @@ void freeVectorPointer(vector<int*> &p)
     for(int i = 0;i<p.size();i++)
         free(p[i]);
 }
+
+void free2dSchedule5(int **p)
+{
+    int idx = 0;
+    while(p[idx][0] != -1)
+    {
+        free(p[idx]);
+        idx++;
+    }
+    p[idx]++;
+    free(p);
+}

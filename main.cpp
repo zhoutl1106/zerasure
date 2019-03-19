@@ -52,13 +52,15 @@ int main(int argc, char *argv[])
         exit(-1);
     }
 
+    printf("\n\n ********* Start zerasure *********\n\n");
+
     if(strcmp(argv[1], "test_cost_weight") == 0)
         ZExample::test_cost_weight(argc,argv);
 
     if(strcmp(argv[1], "single") == 0)
         ZExample::single(argc,argv);
-    printf("--pin1\n");
 
+    printf("\n\n *********  End zerasure **********\n\n");
 
 //    single_1result_vs_dp(argc,argv);
 //    search(argc,argv);

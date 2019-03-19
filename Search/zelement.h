@@ -8,6 +8,7 @@ using namespace std;
 class ZElement
 {
 public:
+    enum cost_type{COST_XOR, COST_SUM, COST_WEIGHTED};
     ZElement(int *p=NULL);
     ZElement(vector<int> p);
     long long value();

@@ -33,4 +33,5 @@ HEADERS += \
     Algorithm/zoxc.h
 
 DISTFILES += \
-    README.md
+    README.md \
+    mfile

@@ -166,6 +166,7 @@ static int *galois_split_w8[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 
 int galois_create_log_tables(int w)
 {
+
   int j, b;
 
   if (w > 30) return -1;
@@ -184,7 +185,7 @@ int galois_create_log_tables(int w)
     galois_log_tables[w][j] = nwm1[w];
     galois_ilog_tables[w][j] = 0;
   } 
-  
+
   b = 1;
   for (j = 0; j < nwm1[w]; j++) {
     if (galois_log_tables[w][b] != nwm1[w]) {
@@ -248,6 +249,7 @@ int galois_create_mult_tables(int w)
   }
   if (galois_log_tables[w] == NULL) {
     if (galois_create_log_tables(w) < 0) {
+        printf("galois_create_mult_tables %d\n",w);
       free(galois_mult_tables[w]);
       free(galois_div_tables[w]);
       galois_mult_tables[w] = NULL;

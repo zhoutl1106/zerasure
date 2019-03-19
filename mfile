@@ -10,10 +10,10 @@ OBJS=galois.o \
 	zrandomarray.o \
 	zoxc.o
 
-CC=gcc	
+CC=gcc
 CXX=g++
-CFLAGS=-mavx2 -msse4 -std=c99 -O3
-CXXFLAGS=-mavx2 -msse4 -O3 -I../lemon-1.3.1 -I../lemon-1.3.1/build
+CFLAGS=-mavx2 -msse4 -std=c99 -O2
+CXXFLAGS=-mavx2 -msse4 -O2
 
 zerasure: $(OBJS) mfile
 	$(CXX) -o zerasure $(OBJS)
