@@ -57,9 +57,9 @@ will read K,M,W,X,Y from stdin(one line in txt file), then perform strategy-(1,3
 ### optimization
 Simulated Annealing and Genetic algorithms are provided.
 
-**test_cost_weight** example showing how to obtain the weight of memcpy and XOR operations.
+**test_cost_weight** example shows how to obtain the weight of memcpy and XOR operations.
 
-**single** example showing the way to calculate out the cost for one given input array.
+**single** example shows the way to calculate out the cost for one given input array.
 Example:
 ~~~
 head -n 1 PreOpt/ge_100_03_06_01_1000_weighted_s13.txt | ./zerasure single 0 7
@@ -77,6 +77,12 @@ as the annealing function, you can update it correspondingly.
 
 **ge** example is an implementation of genetic algorithm, has been detailed commented in the code. 
 
+**code** example shows how to use the coding routines *ZCode::encode_single_chunk, ZCode::set_erasure, ZCode::decode_single_chunk*, it also shows how to manage data to be feed into these routines.
+Example:
+~~~
+head -n 1 PreOpt/ge_100_03_06_01_1000_weighted_s13.txt | ./zerasure code 16384 7
+~~~
+will read K,M,W,X,Y from stdin(one line in txt file), then perform strategy-(1,3) using 16384(16KB) as packetsize.
 ## Code structure
 - Algorithm/
     - ZCauchy: Wrapper of Cauchy RS code of jerasure, subclass of ZCode
