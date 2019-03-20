@@ -8,11 +8,12 @@ OBJS=galois.o \
 	utils.o \
 	zexample.o \
 	zrandomarray.o \
-	zoxc.o
+	zoxc.o \
+	zsimulatedannealing.o
 
 CC=gcc
 CXX=g++
-CFLAGS=-mavx2 -msse4 -std=c99 -O2
+CFLAGS=-mavx2 -msse4 -O2
 CXXFLAGS=-mavx2 -msse4 -O2
 
 zerasure: $(OBJS) mfile
@@ -44,7 +45,8 @@ zrandomarray.o : Search/zrandomarray.cpp Search/zrandomarray.h mfile
 	$(CXX) -c Search/zrandomarray.cpp $(CXXFLAGS)
 zoxc.o : Algorithm/zoxc.cpp Algorithm/zoxc.h mfile
 	$(CXX) -c Algorithm/zoxc.cpp $(CXXFLAGS)
-
+zsimulatedannealing.o : Search/zsimulatedannealing.cpp Search/zsimulatedannealing.h mfile
+	$(CXX) -c Search/zsimulatedannealing.cpp $(CXXFLAG)
 .PHONY: clean
 clean:
 	rm zerasure $(OBJS)

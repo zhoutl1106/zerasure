@@ -18,7 +18,8 @@ SOURCES += \
     Search/zelement.cpp \
     Search/zgenetic.cpp \
     Search/zrandomarray.cpp \
-    Algorithm/zoxc.cpp
+    Algorithm/zoxc.cpp \
+    Search/zsimulatedannealing.cpp
 
 HEADERS += \
     Jerasure-1.2A/galois.h \
@@ -30,7 +31,8 @@ HEADERS += \
     Search/zelement.h \
     Search/zgenetic.h \
     Search/zrandomarray.h \
-    Algorithm/zoxc.h
+    Algorithm/zoxc.h \
+    Search/zsimulatedannealing.h
 
 DISTFILES += \
     README.md \

@@ -9,6 +9,7 @@ extern "C"{
 #include "../Jerasure-1.2A/jerasure.h"
 #include "../Jerasure-1.2A/cauchy.h"
 }
+#include <cassert>
 
 int ZElement::cpy_weight = 1532;
 int ZElement::xor_weight = 2999;
@@ -17,6 +18,7 @@ int ZElement::M = 0;
 int ZElement::W = 0;
 int ZElement::cost_func = 0;
 int ZElement::strategy = 0;
+bool ZElement::isInited = false;
 
 long long schedule_weight_3(vector<int*> &sch)
 {
@@ -72,11 +74,13 @@ long long schedule_len_5(int** sch)
 
 ZElement::ZElement(int *p)
 {
+    assert(isInited);
     array = vector<int>(p,p+K+M);
 }
 
 ZElement::ZElement(vector<int> p)
 {
+    assert(isInited);
     array = p;
 }
 
@@ -87,6 +91,7 @@ void ZElement::init(int tK, int tM, int tW, int tcost, int tstrategy)
     W = tW;
     cost_func = tcost;
     strategy = tstrategy;
+    isInited = true;
 }
 
 long long ZElement::value()
@@ -104,7 +109,7 @@ long long ZElement::value()
     int *matrix;
     int *bitmatrix;
     int **schedule;
-    matrix = cauchy_xy_coding_matrix(K,M,W,array.data(),array.data()+K);
+    matrix = cauchy_xy_coding_matrix(K,M,W,array.data()+K,array.data());
 
     switch(strategy)
     {
@@ -116,6 +121,7 @@ long long ZElement::value()
         free2dSchedule5(schedule);
         free(bitmatrix);
         free(matrix);
+        v = xor0_natual_dumb;
         return xor0_natual_dumb;
     case 1:
         // natual smart
@@ -125,6 +131,7 @@ long long ZElement::value()
         free2dSchedule5(schedule);
         free(bitmatrix);
         free(matrix);
+        v = xor1_natual_smart;
         return xor1_natual_smart;
     case 2:
         // natual grouping unweighed
@@ -135,6 +142,7 @@ long long ZElement::value()
         free(bitmatrix);
         free(matrix);
         delete xc;
+        v = xor2_natual_grouping_unweighted;
         return xor2_natual_grouping_unweighted;
     case 3:
         // natual grouping weightd
@@ -145,6 +153,7 @@ long long ZElement::value()
         free(bitmatrix);
         free(matrix);
         delete xc;
+        v = xor3_natual_grouping_weighted;
         return xor3_natual_grouping_weighted;
     case 4:
         // normal dumb
@@ -155,6 +164,7 @@ long long ZElement::value()
         free2dSchedule5(schedule);
         free(bitmatrix);
         free(matrix);
+        v = xor4_normal_dumb;
         return xor4_normal_dumb;
     case 5:
         // normal smart
@@ -165,6 +175,7 @@ long long ZElement::value()
         free2dSchedule5(schedule);
         free(bitmatrix);
         free(matrix);
+        v = xor5_normal_smart;
         return xor5_normal_smart;
     case 6:
         // normal unweighted
@@ -176,11 +187,13 @@ long long ZElement::value()
         free(bitmatrix);
         free(matrix);
         delete xc;
+        v = xor6_normal_grouping_unweighted;
         return xor6_normal_grouping_unweighted;
     case 7:
         // normal weighted
         cauchy_improve_coding_matrix(K,M,W,matrix);
         bitmatrix = jerasure_matrix_to_bitmatrix(K,M,W,matrix);
+//        jerasure_print_matrix(matrix,M,K,W);
 //        jerasure_print_bitmatrix(bitmatrix,M*W,K*W,W);
         xc = new ZOXC(K*W, M*W);
         xc->grouping_1s(bitmatrix, true);
@@ -188,6 +201,7 @@ long long ZElement::value()
         free(bitmatrix);
         free(matrix);
         delete xc;
+        v = xor7_normal_grouping_weighted;
         return xor7_normal_grouping_weighted;
     }
 

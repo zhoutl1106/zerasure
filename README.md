@@ -26,7 +26,7 @@ make
 ~~~~
 in the root directory in the source code. An executable file *zerasure* will be generated.
 
-Note: Using -O3 optimization will introduce **Illegle Instruction** error on my machine.
+Note: Using -O3 optimization will introduce **Illegal Instruction** error on my machine.
 
 ## Pre-optimized Cauchy Matrix
 Several pre-optimzed $X,Y$ array to define *Cauchy matrix* are provided in **PreOpt/ge_100_03_06_01_1000_weighted_s13.txt**.  
@@ -39,6 +39,7 @@ Each row corresponding to one specified $(k,m,w)$ parameters obtained by *geneti
 - maximum population = 1000
 
 Within one row, first 3 elements are $(k,m,w)$, then $k+m$ rest numbers for $X,Y$ array (see definition of Cauchy matrix). An example of use these numbers will be shown in next section.
+This will also be the output format of Simulated Annealing and Genetic Algorithm.
 
 ## Examples
 All examples are included in the *ZExample* class in Example directory, *main* function will parse the parameters and call corresponding routine.
@@ -48,3 +49,5 @@ zerasure will not handle any data padding or chunking. Only single frame data (b
 
 ### optimization
 Simulated Annealing and Genetic algorithms are provided.
+
+Simulated Annealing: $$acc_rate * exp(-0.05*idx)$$

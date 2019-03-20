@@ -10,7 +10,7 @@ class ZGenetic
 {
 public:
     ZGenetic(int tK, int tM, int tW, int tS, int init, double tselect_rate, double tcrossover_rate,double tmutation_rate, int tmax_population);
-    void mutation(ZElement* e);
+    long long mutation(ZElement* e);
     ZElement* cross_over(ZElement* e1,ZElement* e2);
     void run();
 
@@ -27,9 +27,10 @@ private:
     int max_population;
     set<ZElement*> population;
 
-    int min_best;
+    long long min_best;         // best value in population
+    long long min_worst;        // worst value in population
     int *min_array;
-    long long sum;
+    set<int> rm_ori;
 };
 
 #endif // ZXORGENETIC_H

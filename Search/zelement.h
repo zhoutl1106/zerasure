@@ -12,6 +12,7 @@ public:
     ZElement(int *p=NULL);
     ZElement(vector<int> p);
     long long value();
+    long long v;            // save the ret of value(), avoid re-compute
 
     static void test_cost_weight(int size = 100*1024*1024, int loops = 10);
     static int cpy_weight;
@@ -25,6 +26,7 @@ public:
     static int W;
     static int cost_func; // 0: # of XOR, 1: # of ops, 2: weight sum
     static int strategy; // see paper, 0-7, strategy-(@/4,@%4)
+    static bool isInited; // ensure init() has been called
 
     vector<int> array;
 };
