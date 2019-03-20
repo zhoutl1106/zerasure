@@ -52,7 +52,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 long long diff_ms(struct timeval start, struct timeval end)
 {
-    long mtime, seconds, useconds;
+    long long mtime, seconds, useconds;
 
     seconds  = end.tv_sec  - start.tv_sec;
     useconds = end.tv_usec - start.tv_usec;
@@ -63,7 +63,7 @@ long long diff_ms(struct timeval start, struct timeval end)
 
 long long diff_us(struct timeval start, struct timeval end)
 {
-    long mtime, seconds, useconds;
+    long long mtime, seconds, useconds;
 
     seconds  = end.tv_sec  - start.tv_sec;
     useconds = end.tv_usec - start.tv_usec;
