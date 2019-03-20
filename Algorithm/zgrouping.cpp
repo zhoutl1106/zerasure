@@ -1,28 +1,68 @@
+/*
+zgrouping.cpp
+Tianli Zhou
+
+Fast Erasure Coding for Data Storage: A Comprehensive Study of the Acceleration Techniques
+
+Revision 1.0
+Mar 20, 2019
+
+Tianli Zhou
+Department of Electrical & Computer Engineering
+Texas A&M University
+College Station, TX, 77843
+zhoutianli01@tamu.edu
+
+Copyright (c) 2019, Tianli Zhou
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+- Redistributions of source code must retain the above copyright
+  notice, this list of conditions and the following disclaimer.
+
+- Redistributions in binary form must reproduce the above copyright
+  notice, this list of conditions and the following disclaimer in
+  the documentation and/or other materials provided with the
+  distribution.
+
+- Neither the name of the University of Tennessee nor the names of its
+  contributors may be used to endorse or promote products derived
+  from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+*/
 #include "zgrouping.h"
 extern "C"{
-#include "Jerasure-1.2A/jerasure.h"
-#include "Jerasure-1.2A/cauchy.h"
+#include "../Jerasure-1.2A/jerasure.h"
+#include "../Jerasure-1.2A/cauchy.h"
 }
 #include <cassert>
 #include <cstring>
 #include <sys/time.h>
 #include <x86intrin.h>
 
-int n_of_1s(int *bm, int len);
-char** malloc2d(int row, int col);
-extern "C" long long diff_us(struct timeval start, struct timeval end);
-long long schedule_len_3(vector<int*> &sch);
-//extern int n_tc_cpy, n_tc_xor, n_tg_cpy,n_tg_xor;
+#define talloc(type, num) (type *) malloc(sizeof(type)*(num))
 
 ZGrouping::ZGrouping(int tK, int tM, int tW, vector<int>& arr, bool isNormal, bool isWeightedGrouping, int m_packagesize): ZCode(tK,tM,tW,m_packagesize)
 {
-    //    running_time = 0;
-
     struct timeval t0,t1;
     gettimeofday(&t0,NULL);
     xc = new ZOXC(K*W, M*W);
-
-        printf("new ZDPG K = %d, M= %d, W= %d, arr = %p, isNormal = %d, isWeightedGrouping = %d\n",K,M,W,arr.data(),isNormal,isWeightedGrouping);
+    printf("new ZGrouping K = %d, M= %d, W= %d, arr = %p, isNormal = %d, isWeightedGrouping = %d\n",K,M,W,arr.data(),isNormal,isWeightedGrouping);
 
     for(int i = 0;i<arr.size();i++)
         printf("%d ", arr[i]);
@@ -36,30 +76,17 @@ ZGrouping::ZGrouping(int tK, int tM, int tW, vector<int>& arr, bool isNormal, bo
 //        jerasure_print_matrix(matrix,M,K,W);
 //        printf("Bitmatrix :\n");
 //        jerasure_print_bitmatrix(bitmatrix,M*W,K*W,W);
-    //    printf("#XORs = %d\n", n_of_1s(bitmatrix,K*M*W*W)-K*W);
-    int ret = xc->grouping_1s(bitmatrix,isWeightedGrouping);
+
+    xc->grouping_1s(bitmatrix,isWeightedGrouping);
     gettimeofday(&t1,NULL);
-    //    running_time += diff_us(t0,t1);
     init_time = diff_us(t0,t1);
     for(int i = 0;i<xc->intermedia_schedule.size();i++)
     {
-        //        char* tmp = (char*)aligned_alloc(32,packetsize);
         char *tmp;
         posix_memalign((void**)&tmp,32,packetsize);
-        //        printf("new_inter_buf %d of size %d, %p\n",i, packetsize,tmp);
         intermedia.push_back(tmp);
     }
     erasures = (int*) malloc(sizeof(int) * (K+M));
-    //    printf("Grouping #XORs = %d\n",ret);
-    //    printf("Grouping schedule len = %d\n", xc->schedule.size());
-
-//    printf(" !!! intermedia_schedule: %d\n", xc->intermedia_schedule.size());
-    //    for(vector<int* >::iterator it = xc->intermedia_schedule.begin(); it != xc->intermedia_schedule.end(); it++ )
-    //    {
-    //        printf("%d,%d,%d\n", (*it)[0],(*it)[1],(*it)[2]);
-    //    }
-
-    //    printf("Schedule: %d\n", xc->schedule.size());
     int n_cpy = 0,  n_xor = 0;
     for(vector<int*>::iterator it = xc->schedule.begin(); it != xc->schedule.end();it++)
     {
@@ -85,46 +112,14 @@ void print_array(char* title, char*p, int len)
         fprintf(stderr,"%02X ", (unsigned char)p[i]);
     fprintf(stderr,"\n");
 }
-extern int tg_cpy, tg_xor;
-void myMemcpy(char *dst, char* src, int len)
-{
-    memcpy(dst,src,len);
-}
 
-void myXor(char *r1, char *r2, char* r3, int len)
-{
-//    __m128i *b1, *b2, *b3;
-//    int vec_width = 16;
-//    //    assert(size % vec_width == 0);
-//    int loops = len / vec_width;
-//    //#pragma omp parallel for
-//    for(int j = 0;j<loops;j++)
-//    {
-//        b1 = (__m128i *)(r1+j*vec_width);
-//        b2 = (__m128i *)(r2+j*vec_width);
-//        b3 = (__m128i *)(r3+j*vec_width);
-//        *b3 = _mm_xor_si128(*b1,*b2);
-//    }
-
-    long *l1;
-    long *l2;
-    long *l3;
-    long *ltop;
-    char *ctop;
-
-    ctop = r1 + len;
-    ltop = (long *) ctop;
-    l1 = (long *) r1;
-    l2 = (long *) r2;
-    l3 = (long *) r3;
-
-    while (l1 < ltop) {
-        *l3 = ((*l1)  ^ (*l2));
-        l1++;
-        l2++;
-        l3++;
-    }
-}
+// ops
+// 0: copy data -> parity
+// 1: xor data -> parity
+// 2: copy intermedia -> parity
+// 3: xor intermedia -> parity
+// 4: copy data -> intermedia
+// 5: xor data -> intermedia
 
 void ZGrouping::do_scheduled_operations(vector<int*> &schedule, char **&data, char **&parities)
 {
@@ -132,93 +127,63 @@ void ZGrouping::do_scheduled_operations(vector<int*> &schedule, char **&data, ch
     char *dptr=NULL;
     int sch_len = schedule.size();
     int s,d,op,d_idx,d_off, s_idx, s_off;
-    //    printf("ZGrouping, Schedule len = %d\n", sch_len);
     for(int i = 0;i<sch_len;i++)
     {
-        s = schedule[i][0];//(*it)[0];
-        d = schedule[i][1];//(*it)[1];
-        op = schedule[i][2];//(*it)[2];
+        s = schedule[i][0];
+        d = schedule[i][1];
+        op = schedule[i][2];
         s_idx = s / W;
         s_off = (s % W)*packetsize;
         d_idx = d / W;
         d_off = d % W * packetsize;
-        //                fprintf(stderr,"  -- op %d: KMW=%d,%d,%d: s=%d(%d,%d),d=%d(%d,%d)\n",op, K,M,W,s,s_idx,s_off,d,op,d_idx, d_off);
         switch(op)
         {
         case 0:
-            //            sptr = data + packetsize * s;
             sptr = data[s_idx] + s_off;
             dptr = parities[d_idx] + d_off;
-            //            fprintf(stderr,"0: copy data %d, (%d,%d) = %d\n", s, parity_idx, parity_off, dptr[0]);
-            //            print_array(parities[parity_idx], packetsize * W);
-            myMemcpy(dptr, sptr, packetsize);
+            memcpy(dptr, sptr, packetsize);
             break;
         case 1:
-            //            sptr = data + packetsize * s;
             sptr = data[s_idx] + s_off;
             dptr = parities[d_idx] + d_off;
-            //            fprintf(stderr,"1: xor data %d, (%d,%d) = %d\n", s, parity_idx, parity_off, dptr[0]);
-            //            print_array(parities[parity_idx], packetsize * W);
-            myXor(sptr, dptr, dptr, packetsize);
-            //            galois_region_xor(sptr,dptr,dptr,packetsize);
+            fast_xor(sptr, dptr, dptr, packetsize);
             break;
         case 2:
             sptr = intermedia[s];
             dptr = parities[d_idx] + d_off;
-            //            fprintf(stderr,"2: copy inter %d, (%d,%d) = %d\n", s, parity_idx, parity_off, dptr[0]);
-            //            print_array(parities[parity_idx], packetsize * W);
-            myMemcpy(dptr, sptr, packetsize);
+            memcpy(dptr, sptr, packetsize);
             break;
         case 3:
             sptr = intermedia[s];
             dptr = parities[d_idx] + d_off;
-            //            fprintf(stderr,"3: xor inter %d, (%d,%d) = %d\n", s, parity_idx, parity_off, dptr[0]);
-            //            print_array(parities[parity_idx], packetsize * W);
-            myXor(sptr, dptr, dptr, packetsize);
-            //            galois_region_xor(sptr,dptr,dptr,packetsize);
+            fast_xor(sptr, dptr, dptr, packetsize);
             break;
         case 4:
-            //            sptr = data + packetsize * s;
             sptr = data[s_idx] + s_off;
             dptr = intermedia[d];
-            //            fprintf(stderr,"4: copy to inter %d, %p->%p\n",d,sptr,dptr);
-            //            print_array(intermedia[d], packetsize);
-            myMemcpy(dptr, sptr, packetsize);
+            memcpy(dptr, sptr, packetsize);
             break;
         case 5:
-            //            sptr = data + packetsize * s;
             sptr = data[s_idx] + s_off;
             dptr = intermedia[d];
-            //            fprintf(stderr,"5: xor inter %d, (%d,%d) = %d\n", s, parity_idx, parity_off, dptr[0]);
-            //            print_array(intermedia[d], packetsize);
-            myXor(sptr, dptr, dptr, packetsize);
-            //            galois_region_xor(sptr,dptr,dptr,packetsize);
+            fast_xor(sptr, dptr, dptr, packetsize);
             break;
         }
     }
 }
 
-extern int method_type;
 void ZGrouping::encode_single_chunk(char *data, int len, char **&parities)
 {
-    //    struct timeval t0,t1,t2,t3;
-    //    int i,j;
-    //    assert(data != NULL);
-    //    assert(parities != NULL);
-    //    assert(len == packetsize * K * W);
+    assert(data != NULL);
+    assert(parities != NULL);
+    assert(len == packetsize * K * W);
     char **tdata = (char**)malloc(K*sizeof(char*));
     for(int i = 0;i<K;i++)
         tdata[i] = data + packetsize * i * W;
 
-    //    printf("do schedule\n");
-    //    printf("Schedule len = %d\n", schedule_len_3(xc->schedule));
-    //    gettimeofday(&t0, NULL);
     do_scheduled_operations(xc->schedule,tdata,parities);
-    //    gettimeofday(&t1, NULL);
     free(tdata);
-    //    running_time += diff_us(t0,t1);
 }
-#define talloc(type, num) (type *) malloc(sizeof(type)*(num))
 
 void ZGrouping::set_erasure(vector<int> arr)
 {
@@ -228,7 +193,7 @@ void ZGrouping::set_erasure(vector<int> arr)
         erasures[i] = arr[i];
     }
     erasures[i] = -1;
-    /* hard copy from jerasure */
+    /****** hard copy from jerasure ******/
     int j, x, drive, y, index, z;
     int *decoding_matrix, *inverse, *real_decoding_matrix;
     int *ptr;
@@ -343,12 +308,11 @@ void ZGrouping::set_erasure(vector<int> arr)
             }
         }
     }
-    /* end hard copy */
+    /****** end hard copy ******/
 
     unsigned long long pattern = 0LL;
     for(i = 0;i<arr.size();i++)
         pattern |= 1LL << arr[i];
-
 
     if(de_schedules_map.find(pattern) != de_schedules_map.end())
     {
@@ -361,33 +325,22 @@ void ZGrouping::set_erasure(vector<int> arr)
         printf("new decode schedule for pattern %llu\n",pattern);
         ZOXC txc(K*W,(cdf+ddf)*w);
         txc.grouping_1s(real_decoding_matrix,true);
-        //        printf("DPG schedule len %d\n", schedule_len_3(txc.schedule));
-
-        //        printf("cdf = %d, ddf = %d\n", cdf,ddf);
         vector<int> tid;
         for(int i = 0;i<k+m;i++)
         {
-            //            printf("%d ", row_ids[i]);
             tid.push_back(row_ids[i]);
         }
-        //        printf("\n");
-        //        for(int i = 0;i<k+m;i++)
-        //            printf("%d ", ind_to_row[i]);
-        //        printf("\n");
         ids = tid;
-        //        jerasure_print_bitmatrix(real_decoding_matrix,(cdf+ddf)*W, K*W,W);
         printf("intermedia len = %d / %d\n", txc.intermedia_schedule.size(), intermedia.size());
         if(txc.intermedia_schedule.size() > intermedia.size())
         {
             int old_len = intermedia.size();
             int new_len = txc.intermedia_schedule.size();
-            printf("append new intermedia buffer of len %d, %d->%d\n", new_len - old_len, old_len , new_len);
+
             for(int i = old_len;i<new_len;i++)
             {
-                //        char* tmp = (char*)aligned_alloc(32,packetsize);
                 char *tmp;
                 posix_memalign((void**)&tmp,32,packetsize);
-                //        printf("new_inter_buf %d of size %d, %p\n",i, packetsize,tmp);
                 intermedia.push_back(tmp);
             }
         }
@@ -398,11 +351,6 @@ void ZGrouping::set_erasure(vector<int> arr)
             tsh[i] = (int*) malloc(3*sizeof(int));
             memcpy(tsh[i], txc.schedule[i], 3*sizeof(int));
         }
-        //       for(int i = 0;i<txc.schedule.size();i++)
-        //            printf("  %d %d %d : %d %d %d\n", txc.schedule[i][0], txc.schedule[i][1], txc.schedule[i][2], tsh[i][0], tsh[i][1], tsh[i][2]);
-        //        de_schedule = (int*)malloc()
-        ////        de_schedule = jerasure_generate_decoding_schedule(K,M,W,real_decoding_matrix,erasures,1);
-        ////        assert(de_schedule != NULL);
         ids_map[pattern] = tid;
         de_schedule = tsh;
         de_schedules_map[pattern] = de_schedule;
@@ -412,7 +360,6 @@ void ZGrouping::set_erasure(vector<int> arr)
     free(real_decoding_matrix);
 }
 
-void printArr(char*s, char *p, int len);
 void ZGrouping::decode_single_chunk(char **&data, char **&parities)
 {
     char **tdata = (char**)malloc(K*sizeof(char*));
@@ -428,48 +375,15 @@ void ZGrouping::decode_single_chunk(char **&data, char **&parities)
     {
         if(ids[i] < K)
         {
-            //            printf("tpar[%d] = data[%d]\n", i-K, ids[i]);
             tpar[i-K] = data[ids[i]];
         }
         else
         {
-            //            printf("tpar[%d] = parities[%d]\n", i-K, ids[i]-K);
             tpar[i-K] = parities[ids[i] - K];
         }
     }
 
-    //    for(int i = 0;i<K;i++)
-    //        printf("Data %d=%p, tdata %d=%p\n", i,data[i], i,tdata[i]);
-    //    for(int i = 0;i<M;i++)
-    //        printf("Pari %d=%p, tpar %d=%p\n", i,parities[i], i,tpar[i]);
-
-    //    for(int i = 0;i<K;i++)
-    //        printArr("Datab i", data[i], packetsize*W);
-    //    for(int i = 0;i<M;i++)
-    //        printArr("Parib i", parities[i], packetsize*W);
-
-    //    for(int i = 0;i<K;i++)
-    //        printArr("Databb i", tdata[i], packetsize*W);
-    //    for(int i = 0;i<M;i++)
-    //        printArr("Paribb i", tpar[i], packetsize*W);
     do_scheduled_operations(de_schedule,tdata,tpar);
-
-    //    for(int i = 0;i<K;i++)
-    //        printArr("Dataa i", data[i], packetsize*W);
-    //    for(int i = 0;i<M;i++)
-    //        printArr("Paria i", parities[i], packetsize*W);
-
-
-    //    for(int i = 0;i<K;i++)
-    //        printArr("Dataaa i", tdata[i], packetsize*W);
-    //    for(int i = 0;i<M;i++)
-    //        printArr("Pariaa i", tpar[i], packetsize*W);
-
-    //    for(int i = 0;i<K;i++)
-    //        printf("Data %d=%p, tdata %d=%p\n", i,data[i], i,tdata[i]);
-    //    for(int i = 0;i<M;i++)
-    //        printf("Pari %d=%p, tpar %d=%p\n", i,parities[i], i,tpar[i]);
-
 
     free(tdata);
     free(tpar);

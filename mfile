@@ -9,12 +9,16 @@ OBJS=galois.o \
 	zexample.o \
 	zrandomarray.o \
 	zoxc.o \
-	zsimulatedannealing.o
+	zsimulatedannealing.o \
+	zcauchy.o \
+	zcode.o \
+	zgrouping.o
 
 CC=gcc
 CXX=g++
-CFLAGS=-mavx2 -msse4 -O2
-CXXFLAGS=-mavx2 -msse4 -O2
+VEC=VEC128
+CFLAGS=-mavx2 -msse4 -O2 -D$(VEC)
+CXXFLAGS=-mavx2 -msse4 -O2 -D$(VEC)
 
 zerasure: $(OBJS) mfile
 	$(CXX) -o zerasure $(OBJS)
@@ -47,6 +51,13 @@ zoxc.o : Algorithm/zoxc.cpp Algorithm/zoxc.h mfile
 	$(CXX) -c Algorithm/zoxc.cpp $(CXXFLAGS)
 zsimulatedannealing.o : Search/zsimulatedannealing.cpp Search/zsimulatedannealing.h mfile
 	$(CXX) -c Search/zsimulatedannealing.cpp $(CXXFLAG)
+zcauchy.o : Algorithm/zcauchy.cpp Algorithm/zcauchy.h mfile
+	$(CXX) -c Algorithm/zcauchy.cpp $(CXXFLAGS)
+zcode.o : Algorithm/zcode.cpp Algorithm/zcode.h mfile
+	$(CXX) -c Algorithm/zcode.cpp $(CXXFLAGS)
+zgrouping.o : Algorithm/zgrouping.cpp Algorithm/zgrouping.h mfile
+	$(CXX) -c Algorithm/zgrouping.cpp $(CXXFLAGS)
+
 .PHONY: clean
 clean:
 	rm zerasure $(OBJS)

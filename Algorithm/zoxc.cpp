@@ -1,3 +1,50 @@
+/*
+zoxc.cpp
+Tianli Zhou
+
+Fast Erasure Coding for Data Storage: A Comprehensive Study of the Acceleration Techniques
+
+Revision 1.0
+Mar 20, 2019
+
+Tianli Zhou
+Department of Electrical & Computer Engineering
+Texas A&M University
+College Station, TX, 77843
+zhoutianli01@tamu.edu
+
+Copyright (c) 2019, Tianli Zhou
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+- Redistributions of source code must retain the above copyright
+  notice, this list of conditions and the following disclaimer.
+
+- Redistributions in binary form must reproduce the above copyright
+  notice, this list of conditions and the following disclaimer in
+  the documentation and/or other materials provided with the
+  distribution.
+
+- Neither the name of the University of Tennessee nor the names of its
+  contributors may be used to endorse or promote products derived
+  from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+*/
 #include "zoxc.h"
 #include <stdio.h>
 #include <cstring>
@@ -87,9 +134,9 @@ void ZOXC::add_new_intermedia(int s1, int s2, int idx)
     intermedia_schedule.push_back(tmp);
 }
 
+// perform 1-layer greedy matching as described in huang's paper
 int ZOXC::set_sg(int weight, bool isWeighted, bool isGenSchedule = false)
 {
-    //    printf("set_sg for %d\n", weight);
     bool ret = false;
     ListGraph sg;
     for(int i = 0;i<m_width;i++)
@@ -99,11 +146,9 @@ int ZOXC::set_sg(int weight, bool isWeighted, bool isGenSchedule = false)
 
     for(vector<zedge*>::iterator it = g->all_edges.begin(); it != g->all_edges.end(); it++)
     {
-        //        printf("---pin check edge %d->%d of weight %d\n",(*it)->n0->id,(*it)->n1->id,(*it)->weight);
         if((*it)->weight == weight)
         {
             ret = true;
-            //            printf("---pin found edge %d->%d of weight %d\n",(*it)->n0->id,(*it)->n1->id,(*it)->weight);
             sg.addEdge(sg.nodeFromId((*it)->n0->id), sg.nodeFromId((*it)->n1->id));
         }
     }
@@ -111,7 +156,6 @@ int ZOXC::set_sg(int weight, bool isWeighted, bool isGenSchedule = false)
     if(ret == false) return 0;
 
     ListGraph::EdgeMap<int> cost(sg);
-    //    ListGraph::EdgeMap<bool> matching(sg);
 
     for(ListGraph::EdgeIt e(sg); e != INVALID; ++e)
     {
@@ -121,14 +165,11 @@ int ZOXC::set_sg(int weight, bool isWeighted, bool isGenSchedule = false)
             int id2 = sg.id(sg.v(e));
             int d1 = g->find_node(id1)->degree;
             int d2 = g->find_node(id2)->degree;
-            //            printf("%d[%d] -> %d[%d]\n", id1,d1,id2,d2);
             cost[e] = E - d1 - d2;
-            //            printf("cost[e] = %d\n", cost[e]);
         }
         else
         {
             cost[e] = 1;
-            //            printf("cost[e] = %d\n", cost[e]);
         }
     }
     MaxWeightedMatching<ListGraph, ListGraph::EdgeMap<int> > mm(sg,cost);
@@ -197,8 +238,7 @@ int ZOXC::bitmatrix_to_graph(int *bm)
     return max_edge_weight;
 }
 
-int n_of_1s(int *bm, int len);
-
+// High-level entry
 int ZOXC::grouping_1s(int *bm, bool isWeighted)
 {
     intermedia_index = 0;
@@ -207,11 +247,10 @@ int ZOXC::grouping_1s(int *bm, bool isWeighted)
     bm_copy.resize(m_width*m_height);
     memcpy(bm_copy.data(), bm, m_width*m_height*sizeof(int));
 
+    // start from the edges with the highest degree, see huang's paper.
     int n, cnt;
     n = bitmatrix_to_graph(bm_copy.data());
     g->set_node_degree();
-    //    g->print();
-    //    printf("found n = %d\n", n);
 
     while(n > 1)
     {
@@ -297,6 +336,6 @@ int ZOXC::grouping_1s(int *bm, bool isWeighted)
         }
     }
 
-    return n_XOR;// + n_of_1s(bm_copy.data(), m_width * m_height) - m_height ;
+    return n_XOR;
 }
 

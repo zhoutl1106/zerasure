@@ -1,13 +1,55 @@
+/*
+zcauchy.cpp
+Tianli Zhou
+
+Fast Erasure Coding for Data Storage: A Comprehensive Study of the Acceleration Techniques
+
+Revision 1.0
+Mar 20, 2019
+
+Tianli Zhou
+Department of Electrical & Computer Engineering
+Texas A&M University
+College Station, TX, 77843
+zhoutianli01@tamu.edu
+
+Copyright (c) 2019, Tianli Zhou
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+- Redistributions of source code must retain the above copyright
+  notice, this list of conditions and the following disclaimer.
+
+- Redistributions in binary form must reproduce the above copyright
+  notice, this list of conditions and the following disclaimer in
+  the documentation and/or other materials provided with the
+  distribution.
+
+- Neither the name of the University of Tennessee nor the names of its
+  contributors may be used to endorse or promote products derived
+  from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+*/
 #include "zcauchy.h"
 #include <sys/time.h>
 
-char** malloc2d(int row, int col);
-void free2d(char** &p, int len);
-extern "C" long long diff_us(struct timeval start, struct timeval end);
-extern int n_tc_cpy, n_tc_xor;
 ZCauchy::ZCauchy(int tK, int tM, int tW, vector<int> &arr, bool isSmart, bool isNormal, int m_packetsize): ZCode(tK,1,1,m_packetsize)
 {
-//    running_time = 0;
     K = tK;
     M = tM;
     W = tW;
@@ -22,8 +64,8 @@ ZCauchy::ZCauchy(int tK, int tM, int tW, vector<int> &arr, bool isSmart, bool is
     else
         en_schedule = jerasure_smart_bitmatrix_to_schedule(K,M,W,bitmatrix);
     gettimeofday(&t1,NULL);
-//    running_time += diff_us(t0,t1);
     init_time = diff_us(t0,t1);
+
     int i = 0;
     int n_cpy = 0,  n_xor = 0;
     while(1)
@@ -37,13 +79,14 @@ ZCauchy::ZCauchy(int tK, int tM, int tW, vector<int> &arr, bool isSmart, bool is
         i++;
     }
     printf(" !!! Cauchy Schedule Len %d, memcpy %d, xor %d, cost %d, init time %d us\n", i, n_cpy, n_xor, n_cpy*3065+5998*n_xor,init_time);
-//    printf("Generator Matrix:\n");
-//    jerasure_print_matrix(matrix,M,K,W);
-    //    printf("Bitmatrix :\n");
-//    jerasure_print_bitmatrix(bitmatrix,M*W,K*W,W);
+    printf("Generator Matrix:\n");
+    jerasure_print_matrix(matrix,M,K,W);
+    printf("Bitmatrix :\n");
+    jerasure_print_bitmatrix(bitmatrix,M*W,K*W,W);
     encode_buf = malloc2d(K, W*packetsize);
     erasures = (int*) malloc(sizeof(int) * (K+M));
     free(matrix);
+    blocksize =  packetsize * K * W;
 }
 
 ZCauchy::~ZCauchy()
@@ -57,20 +100,14 @@ ZCauchy::~ZCauchy()
 void ZCauchy::encode_single_chunk(char* data, int len, char**& parities)
 {
     int i,j;
-//    struct timeval t0,t1;
     assert(data != NULL);
     assert(parities != NULL);
     assert(len ==  packetsize * K * W);
     for(i = 0;i<K;i++)
     {
-        //        printf("%d: copy data len %d, from %p to %p\n", i,packetsize*W, data + i*packetsize * W, encode_buf[i]);
         memcpy(encode_buf[i], data + i*packetsize * W, packetsize * W);
     }
-//    gettimeofday(&t0,NULL);
     jerasure_schedule_encode(K,M,W,en_schedule,encode_buf,parities, W*packetsize, packetsize);
-//    gettimeofday(&t1,NULL);
-//    running_time += diff_us(t0,t1);
-//    printf("ZCauchy encode %d using %d us\n", len, diff_us(t0,t1));
 }
 
 void ZCauchy::set_erasure(vector<int> arr)
@@ -106,8 +143,5 @@ void ZCauchy::decode_single_chunk(char **&data, char **&parities)
     char **ptrs;
     ptrs = set_up_ptrs_for_scheduled_decoding(K, M, erasures, data, parities);   
     jerasure_do_scheduled_operations(ptrs, de_schedule, packetsize);
-    //      for (i = 0; i < k+m; i++) ptrs[i] += (packetsize*w);
-//    for(int i = 0;i<K;i++)
-//        memcpy(out + i*packetsize*W, data[i], packetsize*W);
     free(ptrs);
 }

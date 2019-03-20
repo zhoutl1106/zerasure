@@ -774,12 +774,10 @@ void galois_region_xor(           char *r1,         /* Region 1 */
 
 //for(int i = 0;i<size;i++)
 //    r3[i] = r1[i] ^ r2[i];
-
+#ifdef VEC128
     __m128i *b1, *b2, *b3;
     int vec_width = 16;
-//    assert(size % vec_width == 0);
     int loops = size / vec_width;
-//#pragma omp parallel for
     for(int j = 0;j<loops;j++)
     {
         b1 = (__m128i *)(r1+j*vec_width);
@@ -787,20 +785,20 @@ void galois_region_xor(           char *r1,         /* Region 1 */
         b3 = (__m128i *)(r3+j*vec_width);
         *b3 = _mm_xor_si128(*b1,*b2);
     }
+#endif
+#ifdef VEC256
+    int vec_width = 32;
+    int loops = size / vec_width;
 
-//    int vec_width = 32;
-//    int loops = size / vec_width;
-//    assert(size % vec_width == 0);
-
-//    for(int j = 0;j<loops;j++)
-//    {
-//        __m256i *e1, *e2, *e3;
-//        e1 = (__m256i *)(r1+j*vec_width);
-//        e2 = (__m256i *)(r2+j*vec_width);
-//        e3 = (__m256i *)(r3+j*vec_width);
-//        *e3 = _mm256_xor_si256(*e1,*e2);
-//    }
-
+    for(int j = 0;j<loops;j++)
+    {
+        __m256i *e1, *e2, *e3;
+        e1 = (__m256i *)(r1+j*vec_width);
+        e2 = (__m256i *)(r2+j*vec_width);
+        e3 = (__m256i *)(r3+j*vec_width);
+        *e3 = _mm256_xor_si256(*e1,*e2);
+    }
+#endif
 }
 
 int galois_create_split_w8_tables()
