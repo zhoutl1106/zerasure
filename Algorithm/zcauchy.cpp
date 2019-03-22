@@ -47,6 +47,7 @@ POSSIBILITY OF SUCH DAMAGE.
 */
 #include "zcauchy.h"
 #include <sys/time.h>
+#include "Search/zelement.h"
 
 ZCauchy::ZCauchy(int tK, int tM, int tW, vector<int> &arr, bool isSmart, bool isNormal, int m_packetsize): ZCode(tK,1,1,m_packetsize)
 {
@@ -78,7 +79,8 @@ ZCauchy::ZCauchy(int tK, int tM, int tW, vector<int> &arr, bool isSmart, bool is
             n_xor ++;
         i++;
     }
-    printf(" !!! Cauchy Schedule Len %d, memcpy %d, xor %d, cost %d, init time %d us\n", i, n_cpy, n_xor, n_cpy*3065+5998*n_xor,init_time);
+    printf(" !!! Cauchy Schedule Len %d, memcpy %d, xor %d, cost %d, init time %d us\n",
+           i, n_cpy, n_xor, n_cpy*ZElement::cpy_weight + ZElement::xor_weight*n_xor,init_time);
     printf("Generator Matrix:\n");
     jerasure_print_matrix(matrix,M,K,W);
     printf("Bitmatrix :\n");

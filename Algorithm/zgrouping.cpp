@@ -54,6 +54,7 @@ extern "C"{
 #include <cstring>
 #include <sys/time.h>
 #include <x86intrin.h>
+#include "Search/zelement.h"
 
 #define talloc(type, num) (type *) malloc(sizeof(type)*(num))
 
@@ -96,7 +97,8 @@ ZGrouping::ZGrouping(int tK, int tM, int tW, vector<int>& arr, bool isNormal, bo
             n_xor++;
         //            printf("%d,%d,%d\n", (*it)[0],(*it)[1],(*it)[2]);
     }
-    printf(" !!! Grouping Schedule len = %d, mem = %d, xor = %d, weighted = %d, nit %d us\n", xc->schedule.size(), n_cpy, n_xor, n_cpy*3065+5998*n_xor,init_time);
+    printf(" !!! Grouping Schedule len = %d, mem = %d, xor = %d, weighted = %d, init %d us\n",
+           xc->schedule.size(), n_cpy, n_xor, n_cpy*ZElement::cpy_weight + ZElement::xor_weight*n_xor,init_time);
     blocksize =  packetsize * K * W;
 }
 
