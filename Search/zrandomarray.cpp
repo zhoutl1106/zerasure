@@ -64,14 +64,18 @@ ZRandomArray::~ZRandomArray()
     delete [] dat;
 }
 
-int* ZRandomArray::next_random(int KM, int n_first)
+int* ZRandomArray::next_random(int KM, int n_changed)
 {
-    for(int i = 0;i<n_first;i++)
+    for(int i = 0;i<n_changed;i++)
     {
+        // one random position in right (m_l-KM), not used in XY
         int p1 = rand() % (m_l-KM+1) + KM - 1;
         if(KM == m_l)
             p1 = rand() % KM;
+        // one random postion in left KM, used in XY
         int p2 = rand() % KM;
+
+        // swap an unused GF element and a used one
         int t = dat[p1];
         dat[p1] = dat[p2];
         dat[p2] = t;

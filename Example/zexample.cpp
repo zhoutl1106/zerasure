@@ -64,6 +64,7 @@ ZExample::ZExample()
 
 void ZExample::test_cost_weight(int argc, char *argv[])
 {
+    ZElement::init(0,0,0,0,0);
     ZElement* e = new ZElement();
     if(argc == 2)
         e->test_cost_weight();

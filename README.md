@@ -9,17 +9,17 @@ Link: [https://www.usenix.org/conference/fast19/presentation/zhou]
 Zerasure is released with new BSD license.
 
 # Usage
-## Software dependency
+## Software reference
 - Jerasure 1.2A: 
 http://web.eecs.utk.edu/~plank/plank/www/software.html  
-Source codes are partially included in the repo for convinient compiling purpose. However, neither the authors nor the Texas A&M University own these codes. All rights are reserved to Dr. Plank, University of Tennessee, Knoxville. 
+Source codes are partially ported into the repo for convinient compiling purpose. However, neither the authors nor the Texas A&M University own these codes. All rights are reserved to Dr. Plank, University of Tennessee, Knoxville.
 - LEMON:
 https://lemon.cs.elte.hu/trac/lemon  
 Source codes are not included in repo. Please compile and install via above link. The version tested is *lemon-1.3.1*. Neither the authors nor the Texas A&M University own these codes. All rights are reserved to original developer.
 
 ## Compile
 Zerasue use **qmake** to organize the project. No *QT* module, however, is used in the source code. You are free to include the source code in any other form of projects, like *makefile* or *cmake*.
-An **qmake** *.pro* file is included in the repo. compilation could be simple run:
+An **qmake** *.pro* file is included in the repo. Compilation could be simplely:
 ~~~~
 qmake
 make
@@ -32,7 +32,7 @@ make -f mfile
 
 ## Pre-optimized Cauchy Matrix
 Several pre-optimzed $X,Y$ array to define *Cauchy matrix* are provided in **PreOpt/ge_100_03_06_01_1000_weighted_s13.txt**.  
-Each row corresponding to one specified $(k,m,w)$ parameters obtained by *genetic algorithm* with
+Each row corresponding to one specified $(k,m,w)$ parameters obtained by *genetic algorithm, weighted cost function, strategy-(1,3)* with
 
 - initial population = 100
 - select rate = 0.3
@@ -103,5 +103,5 @@ will read K,M,W,X,Y from stdin(one line in txt file), then perform strategy-(1,3
 ### Notes
 1. Scale of vectorization (128/256 bits) are defined in *mfile*, using a makefile variable *VEC*, it could be VEC128/VEC256. We do not have a machine to test the AVX-512 ISA but it will be only few lines codes change as described in the paper.
 2. If you want to use 256 bits AVX2 ISA, all the data pointers have to be **32 Bytes aligned**, neither *malloc* in C nor *new* in C++ will provide this. use *aligned_alloc* or *posix_memalign* depends on your OS.
-3. Optimization option of compiler is *-O2*, Using *-O3* optimization will introduce **Illegal Instruction** error on my machine.
+3. The pre-optimized results are obtained using the same polynomial in Galois Field as discribed in [Plank's paper](https://web.eecs.utk.edu/~plank/plank/papers/CS-08-627.pdf), it will need another optimization for using other polynomial.
 4. Original paper using *strategy-(i,j)*, in this implementation we use number 0 to 7 for easier programming, it equal to $i\times 4+j$

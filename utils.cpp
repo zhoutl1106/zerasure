@@ -124,22 +124,16 @@ void free2dSchedule5(int **p)
 
 char** malloc2d(int row, int col)
 {
-    //    printf("Malloc... 2d %d x %d\n",row, col);
-            char ** ret = (char**) aligned_alloc(32,row * sizeof(char*));
-//    char **ret = (char**)malloc(row*sizeof(char*));
-    //    posix_memalign((void**)&ret, 32, row*sizeof(char*));
-    //    printf("first dim\n");
+    printf("Malloc... 2d %d x %d\n",row, col);
+    char ** ret = (char**) aligned_alloc(32,row * sizeof(char*));
+
     assert(ret != NULL);
     for(int i = 0;i<row;i++)
     {
-        //                ret[i] = (char*)aligned_alloc(32,col);
-        ret[i] = (char*)malloc(col);
-        //        int retv = posix_memalign((void**)(&ret[i]),32,col);
-        //        fprintf(stderr, "%d, posix_memalign return %d, requesting %d mem\n", i, retv,col);
+        ret[i] = (char*)aligned_alloc(32,col);
         assert(ret[i] != NULL);
         memset(ret[i], 0, col);
     }
-    //    printf("Malloc 2d %d x %d\n",row, col);
     return ret;
 }
 
