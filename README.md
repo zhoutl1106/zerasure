@@ -67,6 +67,7 @@ head -n 1 PreOpt/ge_100_03_06_01_1000_weighted_s13.txt | ./zerasure single 0 7
 ~~~
 will read K,M,W,X,Y from stdin(one line in txt file), then perform strategy-(1,3) using 0 (# of XOR) as cost function.
 cost functions:
+
 - 0: # of XOR
 - 1: # of total operations
 - 2: weighted sum of operations, obtained by previous step, default value memcpy is ~1.5x faster than XOR.
