@@ -83,8 +83,8 @@ The **ge** example is an implementation of genetic algorithm. It has detailed co
 - Algorithm/
     - ZCauchy: Wrapper of Cauchy RS code of Jerasure-1.2A, subclass of ZCode
     - ZCode: Abstract class of all erasure codes
-    - ZGrouping: The proposed code in the paper, subclass of ZCode
-    - ZOXC: implementation of the matching algorithm in huang's paper. [(Link)](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/11/On-Optimizing-XOR-Based-Codes-for-Fault-Tolerant-Storage-Applications.pdf) Have a dependency of the implementation of *maximum cardinality matching* in *LEMON* library.
+    - ZGrouping: The proposed erasure code in our FAST'19 paper, subclass of ZCode
+    - ZOXC: Implementation of the matching algorithm in huang's paper. [(Link)](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/11/On-Optimizing-XOR-Based-Codes-for-Fault-Tolerant-Storage-Applications.pdf) Have a dependency of the implementation of *maximum cardinality matching* in *LEMON* library.
 - Example/
     - ZExample: All examples
 - Jerasure-1.2A/
@@ -94,10 +94,10 @@ The **ge** example is an implementation of genetic algorithm. It has detailed co
     - ZGenetic: Implementation of the genetic algorithm 
     - ZRandomArray: Random array generator
     - ZSimulatedAnnealing: Implementation of the simulated annealing
-- utils: some utility functions such as memory management and timing.
+- utils: Some utility functions such as memory management and timing.
 
 ### Notes
-1. Scale of vectorization (128/256 bits) are defined in *mfile*, using a makefile variable *VEC*, it could be VEC128/VEC256. We do not have a machine to test the AVX-512 ISA but it will be only few lines codes change as described in the paper.
-2. If you want to use 256 bits AVX2 ISA, all the data pointers have to be **32 Bytes aligned**, neither *malloc* in C nor *new* in C++ will provide this. Please use *aligned_alloc* or *posix_memalign* depends on your OS.
-3. The pre-optimized results are obtained using the same polynomial in Galois Field as discribed in [Plank's paper](https://web.eecs.utk.edu/~plank/plank/papers/CS-08-627.pdf), it will need another optimization for using other polynomial.
-4. Original paper using *strategy-(i,j)*, in this implementation we use number 0 to 7 for easier programming, it equals to $i\times 4+j$
+1. Width of vectorization (128/256 bits) is defined in *mfile*, using a makefile variable *VEC* and it could be VEC128/VEC256. We do not have a machine to test the AVX-512 ISA but it will be only few lines codes change as described in the paper.
+2. If you wish to use 256-bit AVX2 ISA, all the data pointers have to be **32 Bytes aligned**. Neither *malloc* in C nor *new* in C++ will provide this alignment. Please use *aligned_alloc* or *posix_memalign*, depending on your OS.
+3. The pre-optimized results are obtained using the same polynomial in Galois Field as discribed in [This paper](https://web.eecs.utk.edu/~plank/plank/papers/CS-08-627.pdf).
+4. The *strategy-(i,j)* in our FAST'19 paper correspond to *(ix4+j)*-th in source code. 
