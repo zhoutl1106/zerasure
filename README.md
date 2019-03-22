@@ -100,4 +100,4 @@ as the annealing function, you can update it correspondingly.
 1. Scale of vectorization (128/256 bits) are defined in *mfile*, using a makefile variable *VEC*, it could be VEC128/VEC256. We do not have a machine to test the AVX-512 ISA but it will be only few lines codes change as described in the paper.
 2. If you want to use 256 bits AVX2 ISA, all the data pointers have to be **32 Bytes aligned**, neither *malloc* in C nor *new* in C++ will provide this. use *aligned_alloc* or *posix_memalign* depends on your OS.
 3. The pre-optimized results are obtained using the same polynomial in Galois Field as discribed in [Plank's paper](https://web.eecs.utk.edu/~plank/plank/papers/CS-08-627.pdf), it will need another optimization for using other polynomial.
-4. Original paper using *strategy-(i,j)*, in this implementation we use number 0 to 7 for easier programming, it equal to $i\times 4+j$
+4. Original paper using *strategy-(i,j)*, in this implementation we use number 0 to 7 for easier programming, it equals to $i\times 4+j$
