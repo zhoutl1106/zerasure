@@ -48,11 +48,12 @@ All examples are included in the *ZExample* class in Example directory, *main* f
 
 ### data coding 
 zerasure will not handle any data padding or chunking. Only single frame data (blocksize in source code) will be processed. Assertions are added to assure only fix amount of data is passed. Refer to the *code* example for details. 
+**code** example shows how to use the coding routines *ZCode::encode_single_chunk, ZCode::set_erasure, ZCode::decode_single_chunk*, it also shows how to manage data to be feed into these routines.
 Example:
 ~~~
 head -n 1 PreOpt/ge_100_03_06_01_1000_weighted_s13.txt | ./zerasure code 16384 7
 ~~~
-will read K,M,W,X,Y from stdin(one line in txt file), then perform strategy-(1,3)
+will read K,M,W,X,Y from stdin(one line in txt file), then perform strategy-(1,3) using 16384(16KB) as packetsize.
 
 ### optimization
 Simulated Annealing and Genetic algorithms are provided.
@@ -77,12 +78,6 @@ as the annealing function, you can update it correspondingly.
 
 **ge** example is an implementation of genetic algorithm, has been detailed commented in the code. 
 
-**code** example shows how to use the coding routines *ZCode::encode_single_chunk, ZCode::set_erasure, ZCode::decode_single_chunk*, it also shows how to manage data to be feed into these routines.
-Example:
-~~~
-head -n 1 PreOpt/ge_100_03_06_01_1000_weighted_s13.txt | ./zerasure code 16384 7
-~~~
-will read K,M,W,X,Y from stdin(one line in txt file), then perform strategy-(1,3) using 16384(16KB) as packetsize.
 ## Code structure
 - Algorithm/
     - ZCauchy: Wrapper of Cauchy RS code of jerasure, subclass of ZCode
