@@ -753,27 +753,6 @@ void galois_region_xor(           char *r1,         /* Region 1 */
                                   char *r3,         /* Sum region (r3 = r1 ^ r2) -- can be r1 or r2 */
                                   int size)       /* Number of bytes in region */
 {
-//  long *l1;
-//  long *l2;
-//  long *l3;
-//  long *ltop;
-//  char *ctop;
-  
-//  ctop = r1 + size;
-//  ltop = (long *) ctop;
-//  l1 = (long *) r1;
-//  l2 = (long *) r2;
-//  l3 = (long *) r3;
- 
-//  while (l1 < ltop) {
-//    *l3 = ((*l1)  ^ (*l2));
-//    l1++;
-//    l2++;
-//    l3++;
-//  }
-
-//for(int i = 0;i<size;i++)
-//    r3[i] = r1[i] ^ r2[i];
 #ifdef VEC128
     __m128i *b1, *b2, *b3;
     int vec_width = 16;
@@ -785,8 +764,7 @@ void galois_region_xor(           char *r1,         /* Region 1 */
         b3 = (__m128i *)(r3+j*vec_width);
         *b3 = _mm_xor_si128(*b1,*b2);
     }
-#endif
-#ifdef VEC256
+#elif VEC256
     int vec_width = 32;
     int loops = size / vec_width;
 
@@ -798,6 +776,25 @@ void galois_region_xor(           char *r1,         /* Region 1 */
         e3 = (__m256i *)(r3+j*vec_width);
         *e3 = _mm256_xor_si256(*e1,*e2);
     }
+#else
+      long *l1;
+      long *l2;
+      long *l3;
+      long *ltop;
+      char *ctop;
+
+      ctop = r1 + size;
+      ltop = (long *) ctop;
+      l1 = (long *) r1;
+      l2 = (long *) r2;
+      l3 = (long *) r3;
+
+      while (l1 < ltop) {
+        *l3 = ((*l1)  ^ (*l2));
+        l1++;
+        l2++;
+        l3++;
+      }
 #endif
 }
 

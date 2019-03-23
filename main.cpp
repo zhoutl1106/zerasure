@@ -86,6 +86,13 @@ int main(int argc, char *argv[])
         exit(-1);
     }
 
+#ifdef VEC128
+    printf("Using 128-bit vectorization\n");
+#elif VEC256
+    printf("Using 256-bit vectorization\n");
+#else
+    printf("Unknown Vectorization\n");
+#endif
     printf("\n\n ********* Start zerasure *********\n\n");
 
     if(strcmp(argv[1], "test_cost_weight") == 0)

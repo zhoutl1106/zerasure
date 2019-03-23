@@ -2,8 +2,9 @@ TEMPLATE = app
 CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
-QMAKE_CXXFLAGS += -lemon -O3 -msse4 -mavx -I../lemon-1.3.1/ -I../lemon-1.3.1/build
-QMAKE_CFLAGS += -lemon -O3 -msse4
+VEC=VEC128
+QMAKE_CXXFLAGS += -lemon -O3 -msse4 -mavx -D$${VEC}
+QMAKE_CFLAGS += -lemon -O3 -msse4 -D$${VEC}
 QMAKE_CC = gcc
 QMAKE_CXX = g++
 

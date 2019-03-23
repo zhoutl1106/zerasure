@@ -79,7 +79,6 @@ void fast_xor(char* r1, char* r2, char* r3, int size)
     __m128i *b1, *b2, *b3;
     int vec_width = 16;
     int loops = size / vec_width;
-
     for(int j = 0;j<loops;j++)
     {
         b1 = (__m128i *)(r1+j*vec_width);
@@ -87,8 +86,7 @@ void fast_xor(char* r1, char* r2, char* r3, int size)
         b3 = (__m128i *)(r3+j*vec_width);
         *b3 = _mm_xor_si128(*b1,*b2);
     }
-#endif
-#ifdef VEC256
+#elif VEC256
     int vec_width = 32;
     int loops = size / vec_width;
 
@@ -100,6 +98,25 @@ void fast_xor(char* r1, char* r2, char* r3, int size)
         e3 = (__m256i *)(r3+j*vec_width);
         *e3 = _mm256_xor_si256(*e1,*e2);
     }
+#else
+      long *l1;
+      long *l2;
+      long *l3;
+      long *ltop;
+      char *ctop;
+
+      ctop = r1 + size;
+      ltop = (long *) ctop;
+      l1 = (long *) r1;
+      l2 = (long *) r2;
+      l3 = (long *) r3;
+
+      while (l1 < ltop) {
+        *l3 = ((*l1)  ^ (*l2));
+        l1++;
+        l2++;
+        l3++;
+      }
 #endif
 }
 
