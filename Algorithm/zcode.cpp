@@ -51,6 +51,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <sys/time.h>
 #include <algorithm>
 #include <string.h>
+#include <stdio.h>
 #include "../Search/zrandomarray.h"
 
 ZCode::ZCode(int tk, int tm, int tw, int mp)

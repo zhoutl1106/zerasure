@@ -54,7 +54,7 @@ extern "C"{
 #include <cstring>
 #include <sys/time.h>
 #include <x86intrin.h>
-#include "Search/zelement.h"
+#include "../Search/zelement.h"
 
 #define talloc(type, num) (type *) malloc(sizeof(type)*(num))
 

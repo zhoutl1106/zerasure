@@ -47,7 +47,7 @@ POSSIBILITY OF SUCH DAMAGE.
 */
 #include "zcauchy.h"
 #include <sys/time.h>
-#include "Search/zelement.h"
+#include "../Search/zelement.h"
 
 ZCauchy::ZCauchy(int tK, int tM, int tW, vector<int> &arr, bool isSmart, bool isNormal, int m_packetsize): ZCode(tK,1,1,m_packetsize)
 {

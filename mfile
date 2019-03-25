@@ -17,8 +17,9 @@ OBJS=galois.o \
 CC=gcc
 CXX=g++
 VEC=VEC128
+LEMON_DIR=../usr/local/include
 CFLAGS=-mavx2 -msse4 -O2 -D$(VEC)
-CXXFLAGS=-mavx2 -msse4 -O2 -D$(VEC)
+CXXFLAGS=-mavx2 -msse4 -O2 -D$(VEC) -I$(LEMON_DIR)
 
 zerasure: $(OBJS) mfile
 	$(CXX) -o zerasure $(OBJS)
