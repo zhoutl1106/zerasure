@@ -84,7 +84,7 @@ ZGrouping::ZGrouping(int tK, int tM, int tW, vector<int>& arr, bool isNormal, bo
     for(int i = 0;i<xc->intermedia_schedule.size();i++)
     {
         char *tmp;
-        posix_memalign((void**)&tmp,32,packetsize);
+        posix_memalign((void**)&tmp,64,packetsize);
         intermedia.push_back(tmp);
     }
     erasures = (int*) malloc(sizeof(int) * (K+M));
@@ -138,6 +138,7 @@ void ZGrouping::do_scheduled_operations(vector<int*> &schedule, char **&data, ch
         s_off = (s % W)*packetsize;
         d_idx = d / W;
         d_off = d % W * packetsize;
+	//printf("%d %d %d\n", s,d,op);
         switch(op)
         {
         case 0:
@@ -342,7 +343,7 @@ void ZGrouping::set_erasure(vector<int> arr)
             for(int i = old_len;i<new_len;i++)
             {
                 char *tmp;
-                posix_memalign((void**)&tmp,32,packetsize);
+                posix_memalign((void**)&tmp,64,packetsize);
                 intermedia.push_back(tmp);
             }
         }
@@ -364,8 +365,8 @@ void ZGrouping::set_erasure(vector<int> arr)
 
 void ZGrouping::decode_single_chunk(char **&data, char **&parities)
 {
-    char **tdata = (char**)malloc(K*sizeof(char*));
-    char **tpar = (char**)malloc(M*sizeof(char*));
+    char **tdata = (char**)aligned_alloc(64, K*sizeof(char*));
+    char **tpar = (char**)aligned_alloc(64, M*sizeof(char*));
     for(int i = 0;i<K;i++)
     {
         if(ids[i] < K)

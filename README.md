@@ -19,16 +19,11 @@ Source code of this library is not included in this repo. Please compile and ins
 
 ## Compile
 Zerasue use **qmake** to organize the project. No *QT* module, however, is used in the source code.
-A **qmake** *.pro* file is included in the repo. Compilation could be simply:
-~~~~
-qmake
-make
-~~~~
-in the root directory of the source code. An executable file *zerasure* will be generated.
-A *makefile* with default compilation flags is also provided named **mfile**, you can compile using
+A **qmake** *.pro* file is included in the repo for organing purpose only. A *makefile* with default compilation flags is also provided named **mfile**, you can compile using
 ~~~
 make -f mfile
 ~~~
+i n the root directory of the source code. An executable file *zerasure* will be generated.
 
 ## Pre-optimized Cauchy Matrix
 Several pre-optimzed X,Y arrays to define *Cauchy matrix* are provided in **PreOpt/ge_100_03_06_01_1000_weighted_s13.txt**.  
@@ -97,7 +92,7 @@ The **ge** example is an implementation of genetic algorithm. It has detailed co
 - utils: Some utility functions such as memory management and timing.
 
 ### Notes
-1. Width of vectorization (128/256 bits) is defined in *mfile* and *zerasure.pro*, using a makefile variable *VEC* and it could be VEC128/VEC256. You can update the variable in ONE file depends on how you organize the project (make or qmake). We do not have a machine to test the AVX-512 ISA but it will be only few lines codes change as described in the paper.
+1. Width of vectorization (128/256/512 bits) is defined in *mfile*, using a makefile variable *VEC* and it could be VEC128/VEC256/VEC512. (Our 512-bit test running on Intel Xeon Gold 5118 CPU which belongs to Skylake-X family, you'll need to update the compiling flag depends on your hardware specs. 
 2. If you wish to use 256-bit AVX2 ISA, all the data pointers have to be **32 Bytes aligned**. Neither *malloc* in C nor *new* in C++ will provide this alignment. Please use *aligned_alloc* or *posix_memalign*, depending on your OS.
 3. The pre-optimized results are obtained using the same polynomial in Galois Field as discribed in [This paper](https://web.eecs.utk.edu/~plank/plank/papers/CS-08-627.pdf).
 4. Strategy-(i,j) in our FAST'19 paper corresponds to the (ix4+j)-th strategy in the source code.

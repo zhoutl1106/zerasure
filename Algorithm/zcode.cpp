@@ -92,14 +92,14 @@ void ZCode::test_speed()
         size ++;
     int loops = size/(blocksize);
     printf("size is %d Byte, %d loops\n",size,loops);
-    char *dat = (char*)malloc(size);
+    char *dat = (char*)aligned_alloc(64,size);
     for(int i = 0;i<size;i++)
     {
         dat[i] = rand();
     }
 
     char** par = malloc2d(M, size/K);
-    char** parities = new char*[M];
+    char** parities = (char**) aligned_alloc(64, sizeof(char*)*M);
     for(int i = 0;i<M;i++)
         parities[i] = par[i];
     // Encode

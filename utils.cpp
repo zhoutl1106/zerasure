@@ -157,14 +157,14 @@ char** malloc2d(int row, int col)
 {
     printf("Malloc... 2d %d x %d\n",row, col);
     char ** ret = (char**) aligned_alloc(64,row * sizeof(char*));
-    printf("%p\n", ret);
+   // printf("%p\n", ret);
 
     assert(ret != NULL);
     for(int i = 0;i<row;i++)
     {
         ret[i] = (char*)aligned_alloc(64,col);
         assert(ret[i] != NULL);
-        printf("%p\n", ret[i]);
+    //    printf("%p\n", ret[i]);
         memset(ret[i], 0, col);
     }
     return ret;

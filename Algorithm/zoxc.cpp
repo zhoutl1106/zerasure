@@ -312,6 +312,7 @@ int ZOXC::grouping_1s(int *bm, bool isWeighted)
         if(schedule[i][0] >= m_width)
             schedule[i][0] -= m_width;
 
+#ifndef VEC512
     // change first occurance of each parity/intermeida as dest to copy
     for(int i = 0; i < schedule.size(); i++)
     {
@@ -335,6 +336,7 @@ int ZOXC::grouping_1s(int *bm, bool isWeighted)
             }
         }
     }
+#endif
 
     return n_XOR;
 }
