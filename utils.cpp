@@ -75,11 +75,12 @@ long long diff_us(struct timeval start, struct timeval end)
 // r1 + r2 -> r3
 void fast_xor(char* r1, char* r2, char* r3, int size)
 {
+    int j;
 #ifdef VEC128
     __m128i *b1, *b2, *b3;
     int vec_width = 16;
     int loops = size / vec_width;
-    for(int j = 0;j<loops;j++)
+    for(j = 0;j<loops;j++)
     {
         b1 = (__m128i *)(r1+j*vec_width);
         b2 = (__m128i *)(r2+j*vec_width);
@@ -90,7 +91,7 @@ void fast_xor(char* r1, char* r2, char* r3, int size)
     int vec_width = 32;
     int loops = size / vec_width;
 
-    for(int j = 0;j<loops;j++)
+    for(j = 0;j<loops;j++)
     {
         __m256i *e1, *e2, *e3;
         e1 = (__m256i *)(r1+j*vec_width);
@@ -98,6 +99,19 @@ void fast_xor(char* r1, char* r2, char* r3, int size)
         e3 = (__m256i *)(r3+j*vec_width);
         *e3 = _mm256_xor_si256(*e1,*e2);
     }
+#elif VEC512
+    int vec_width = 64;
+    int loops = size / vec_width;
+
+    for(j = 0;j<loops;j++)
+    {
+        __m512i *e1, *e2, *e3;
+        e1 = (__m512i *)(r1+j*vec_width);
+        e2 = (__m512i *)(r2+j*vec_width);
+        e3 = (__m512i *)(r3+j*vec_width);
+        *e3 = _mm512_xor_epi32(*e1,*e2);
+    }
+#
 #else
       long *l1;
       long *l2;
@@ -142,13 +156,15 @@ void free2dSchedule5(int **p)
 char** malloc2d(int row, int col)
 {
     printf("Malloc... 2d %d x %d\n",row, col);
-    char ** ret = (char**) aligned_alloc(32,row * sizeof(char*));
+    char ** ret = (char**) aligned_alloc(64,row * sizeof(char*));
+    printf("%p\n", ret);
 
     assert(ret != NULL);
     for(int i = 0;i<row;i++)
     {
-        ret[i] = (char*)aligned_alloc(32,col);
+        ret[i] = (char*)aligned_alloc(64,col);
         assert(ret[i] != NULL);
+        printf("%p\n", ret[i]);
         memset(ret[i], 0, col);
     }
     return ret;

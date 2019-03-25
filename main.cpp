@@ -90,6 +90,8 @@ int main(int argc, char *argv[])
     printf("Using 128-bit vectorization\n");
 #elif VEC256
     printf("Using 256-bit vectorization\n");
+#elif VEC512
+    printf("Using 512-bit vectorization\n");
 #else
     printf("Unknown Vectorization\n");
 #endif

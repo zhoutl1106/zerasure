@@ -16,10 +16,20 @@ OBJS=galois.o \
 
 CC=gcc
 CXX=g++
-VEC=VEC128
+VEC=VEC512
 LEMON_DIR=../usr/local/include
-CFLAGS=-mavx2 -msse4 -O2 -D$(VEC)
-CXXFLAGS=-mavx2 -msse4 -O2 -D$(VEC) -I$(LEMON_DIR)
+ifeq ($(VEC), VEC128)
+	CFLAGS=-msse4 -O2 -D$(VEC)
+	CXXFLAGS=-msse4 -O2 -D$(VEC) -I$(LEMON_DIR)
+endif
+ifeq ($(VEC), VEC256)
+	CFLAGS=-mavx2 -O2 -D$(VEC)
+	CXXFLAGS=-mavx2 -O2 -D$(VEC) -I$(LEMON_DIR)
+endif
+ifeq ($(VEC), VEC512)
+	CFLAGS=-march=skylake-avx512 -O2 -D$(VEC)
+	CXXFLAGS=-march=skylake-avx512 -O2 -D$(VEC) -I$(LEMON_DIR) -L../lib64 -L../lib
+endif
 
 zerasure: $(OBJS) mfile
 	$(CXX) -o zerasure $(OBJS)
