@@ -757,7 +757,8 @@ void galois_region_xor(           char *r1,         /* Region 1 */
     __m128i *b1, *b2, *b3;
     int vec_width = 16;
     int loops = size / vec_width;
-    for(int j = 0;j<loops;j++)
+    int j;
+    for(j = 0;j<loops;j++)
     {
         b1 = (__m128i *)(r1+j*vec_width);
         b2 = (__m128i *)(r2+j*vec_width);
@@ -767,8 +768,9 @@ void galois_region_xor(           char *r1,         /* Region 1 */
 #elif VEC256
     int vec_width = 32;
     int loops = size / vec_width;
+    int j;
 
-    for(int j = 0;j<loops;j++)
+    for(j = 0;j<loops;j++)
     {
         __m256i *e1, *e2, *e3;
         e1 = (__m256i *)(r1+j*vec_width);

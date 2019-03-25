@@ -197,7 +197,7 @@ void ZExample::code(int argc, char *argv[])
             zc = (ZCode*) new ZGrouping(K,M,W,arr,isNormal,isWeightedGrouping,packetsize);
             break;
         case 3:
-            // natual grouping weightd
+            // natual grouping weighted
             isNormal = false;
             isWeightedGrouping = true;
             zc = (ZCode*) new ZGrouping(K,M,W,arr,isNormal,isWeightedGrouping,packetsize);

@@ -49,6 +49,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #define ZELEMENT_H
 
 #include <vector>
+#include <stdlib.h>
 
 using namespace std;
 
