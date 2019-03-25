@@ -92,7 +92,7 @@ The **ge** example is an implementation of genetic algorithm. It has detailed co
 - utils: Some utility functions such as memory management and timing.
 
 ### Notes
-1. Width of vectorization (128/256/512 bits) is defined in *mfile*, using a makefile variable *VEC* and it could be VEC128/VEC256/VEC512. (Our 512-bit test running on Intel Xeon Gold 5118 CPU which belongs to Skylake-X family, you'll need to update the compiling flag depends on your hardware specs. 
+1. Width of vectorization (128/256/512 bits) is defined in *mfile*, using a makefile variable *VEC* and it could be VEC128/VEC256/VEC512. (Our 512-bit test running on Intel Xeon Gold 5118 CPU which belongs to Skylake-X family, you'll need to update the compiling flag depends on your hardware specs. For using these AVX-512 flags, you'll need to have gcc 7+)
 2. If you wish to use 256-bit AVX2 ISA, all the data pointers have to be **32 Bytes aligned**. Neither *malloc* in C nor *new* in C++ will provide this alignment. Please use *aligned_alloc* or *posix_memalign*, depending on your OS.
 3. The pre-optimized results are obtained using the same polynomial in Galois Field as discribed in [This paper](https://web.eecs.utk.edu/~plank/plank/papers/CS-08-627.pdf).
 4. Strategy-(i,j) in our FAST'19 paper corresponds to the (ix4+j)-th strategy in the source code.
