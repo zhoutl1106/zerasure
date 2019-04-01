@@ -184,6 +184,13 @@ void ZGrouping::encode_single_chunk(char *data, int len, char **&parities)
     for(int i = 0;i<K;i++)
         tdata[i] = data + packetsize * i * W;
 
+#ifdef VEC512
+    for(int i = 0;i<M;i++)
+        memset(parities[i],0,packetsize);
+    for(int i = 0;i<intermedia.size();i++)
+        memset(intermedia[i],0,packetsize);
+#endif
+
     do_scheduled_operations(xc->schedule,tdata,parities);
     free(tdata);
 }
@@ -384,7 +391,14 @@ void ZGrouping::decode_single_chunk(char **&data, char **&parities)
         {
             tpar[i-K] = parities[ids[i] - K];
         }
+#ifdef VEC512
+        memset(tpar[i-K],0,packetsize);
+#endif
     }
+#ifdef VEC512
+    for(int i = 0;i<intermedia.size();i++)
+        memset(intermedia[i],0,packetsize);
+#endif
 
     do_scheduled_operations(de_schedule,tdata,tpar);
 

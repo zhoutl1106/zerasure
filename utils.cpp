@@ -47,6 +47,8 @@ POSSIBILITY OF SUCH DAMAGE.
 */
 #include "utils.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <sys/time.h>
 #include <string.h>
 #include <cassert>
 
@@ -111,7 +113,6 @@ void fast_xor(char* r1, char* r2, char* r3, int size)
         e3 = (__m512i *)(r3+j*vec_width);
         *e3 = _mm512_xor_epi32(*e1,*e2);
     }
-#
 #else
       long *l1;
       long *l2;

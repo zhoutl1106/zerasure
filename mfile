@@ -16,7 +16,7 @@ OBJS=galois.o \
 
 CC=gcc
 CXX=g++
-VEC=VEC512
+VEC=VEC128
 LEMON_DIR=../usr/local/include
 ifeq ($(VEC), VEC128)
 	CFLAGS=-msse4 -O2 -D$(VEC)
