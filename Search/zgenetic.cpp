@@ -63,7 +63,7 @@ ZGenetic::ZGenetic(int tK, int tM, int tW, int tS, int init, double tselect_rate
     crossover_rate = tcrossover_rate;
     mutation_rate = tmutation_rate;
     max_population = tmax_population;
-    zra = new ZRandomArray(W*W);
+    zra = new ZRandomArray(1<<W);
     min_array = new int[K+M];
     min_best = 1e9;
     min_worst = -1;
@@ -78,7 +78,7 @@ ZGenetic::ZGenetic(int tK, int tM, int tW, int tS, int init, double tselect_rate
     fprintf(stderr, "initing first %d elements\n", init);
     for(int i = 0;i<init;i++)
     {
-        int *p = zra->next_random(K+M, K+M);
+        int *p = zra->next_random(1<<W, 1<<W);
         ZElement* peo = new ZElement(p);
         ret = peo->value();
         if(ret > min_worst)
@@ -130,15 +130,15 @@ std::multimap<B,A> flip_map(const std::map<A,B> &src)
 ZElement* ZGenetic::cross_over(ZElement *e1, ZElement *e2)
 {
     // 1. Get all XYs in parents
-    map<int,int> condidates;
+    map<int,int> candidates;
     for(vector<int>::iterator it1 = e1->array.begin(); it1 != e1->array.end(); it1++)
-        condidates[(*it1)] ++;
+        candidates[(*it1)] ++;
     for(vector<int>::iterator it1 = e2->array.begin(); it1 != e2->array.end(); it1++)
-        condidates[(*it1)] ++;
+        candidates[(*it1)] ++;
 
     // 2. insert most common elements first until length is K+M
     vector<int> arr;
-    std::multimap<int, int> dst = flip_map(condidates);
+    std::multimap<int, int> dst = flip_map(candidates);
     for(multimap<int,int>::reverse_iterator it5 = dst.rbegin(); it5 != dst.rend() && arr.size() < K+M; it5 ++)
     {
         arr.push_back(it5->second);

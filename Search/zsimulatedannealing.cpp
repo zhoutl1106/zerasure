@@ -59,7 +59,7 @@ ZSimulatedAnnealing::ZSimulatedAnnealing(int tK, int tM, int tW, int tS, double 
     W = tW;
     S = tS;
     acc_rate = tacc_rate;
-    zra = new ZRandomArray(W*W);
+    zra = new ZRandomArray(1<<W);
     printf("Begin Simulated Annealing, K = %d, M = %d, W = %d, S = %d, init accept rate = %f\n", K,M,W,S,acc_rate);
 }
 
