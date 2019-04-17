@@ -101,3 +101,6 @@ The **ge** example is an implementation of genetic algorithm. It has detailed co
 2. If you wish to use 256-bit AVX2 ISA, all the data pointers have to be **32 Bytes aligned**. Neither *malloc* in C nor *new* in C++ will provide this alignment. Please use *aligned_alloc* or *posix_memalign*, depending on your OS.
 3. The pre-optimized results are obtained using the same polynomial in Galois Field as discribed in [This paper](https://web.eecs.utk.edu/~plank/plank/papers/CS-08-627.pdf).
 4. Strategy-(i,j) in our FAST'19 paper corresponds to the (ix4+j)-th strategy in the source code.
+
+### Update
+A new option *VEC512* has been added to feature/avx512 branch, it's still under development but you can see how to utilize the AVX-512 ISA set of latest Intel CPUs.

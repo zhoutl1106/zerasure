@@ -63,12 +63,12 @@ ZGenetic::ZGenetic(int tK, int tM, int tW, int tS, int init, double tselect_rate
     crossover_rate = tcrossover_rate;
     mutation_rate = tmutation_rate;
     max_population = tmax_population;
-    zra = new ZRandomArray(W*W);
+    zra = new ZRandomArray(1<<W);
     min_array = new int[K+M];
     min_best = 1e9;
     min_worst = -1;
 
-    for(int i = 0;i<W*W;i++)
+    for(int i = 0;i<(1<<W);i++)
         rm_ori.insert(i);
 
     long long ret;
