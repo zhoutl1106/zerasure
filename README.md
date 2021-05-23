@@ -18,7 +18,7 @@ https://lemon.cs.elte.hu/trac/lemon
 Source code of this library is not included in this repo. Please compile and install via link above. The version tested is *lemon-1.3.1*. Neither the authors nor Texas A&M University own this source code. All rights are reserved to the Egerváry Combinatorial Optimization Research Group under the [Boost License](https://opensource.org/licenses/BSL-1.0).
 
 ## Compile
-Zerasue use **qmake** to organize the project. No *QT* module, however, is used in the source code.
+Zerasure uses **qmake** to organize the project. No *QT* module, however, is used in the source code.
 A **qmake** *.pro* file is included in the repo. Compilation could be simply:
 ~~~~
 qmake
