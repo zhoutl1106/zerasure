@@ -12,10 +12,10 @@ Zerasure is released under the new BSD license.
 ## Software reference
 - Jerasure 1.2A: 
 http://web.eecs.utk.edu/~plank/plank/www/software.html  
-Source code of this library is partially ported into the repo for convinient compiling purpose. However, neither the authors nor Texas A&M University own this source code. All rights are reserved to Dr. Plank, University of Tennessee, Knoxville.
+Source code of this library is partially ported into the repo for convinient compiling purpose. However, neither the authors nor Texas A&M University own this source code. All rights are reserved to Dr. Plank, University of Tennessee, Knoxville who has published Jerasure under the [New BSD License](https://opensource.org/licenses/BSD-3-Clause).
 - LEMON:
 https://lemon.cs.elte.hu/trac/lemon  
-Source code of this library is not included in this repo. Please compile and install via link above. The version tested is *lemon-1.3.1*. Neither the authors nor Texas A&M University own this source code. All rights are reserved to the original developer.
+Source code of this library is not included in this repo. Please compile and install via link above. The version tested is *lemon-1.3.1*. Neither the authors nor Texas A&M University own this source code. All rights are reserved to the Egerváry Combinatorial Optimization Research Group under the [Boost License](https://opensource.org/licenses/BSL-1.0).
 
 ## Compile
 Zerasue use **qmake** to organize the project. No *QT* module, however, is used in the source code.
